@@ -1,0 +1,44 @@
+{{- if and .Values.istio.enabled .Values.istio.fluentd.enabled -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: fluentd
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.istio.fluentd.labels }}
+  labels:
+  {{ toYaml .Values.istio.fluentd.labels | indent 2 }}
+  {{- end }}
+  {{- if .Values.istio.fluentd.annotations }}
+  annotations:
+  {{ toYaml .Values.istio.fluentd.annotations | indent 2 }}
+  {{- end }}
+
+spec:
+  {{- range .Values.istio.fluentd.gateways }}
+  gateways:
+    - {{ . }}
+  {{- end }}
+  {{- range .Values.istio.fluentd.hosts }}
+  hosts:
+    - {{ tpl . $ }}
+  {{- end }}
+  {{- range .Values.service.ports }}
+  {{- if eq .protocol "TCP"}}
+  tcp:
+    - match:
+      - port: {{ .tcpPort }}
+      route:
+        - destination:
+            port:
+              number: {{ .containerPort }}
+            host: {{ include "fluentd.fullname" $ }}
+  {{- else if eq .protocol "HTTP" }}
+  http:
+    - route:
+        - destination:
+            port:
+              number: {{ .containerPort }}
+            host: {{ include "fluentd.fullname" $ }}
+  {{- end }}
+  {{- end }}
+{{- end }}

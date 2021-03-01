@@ -1,0 +1,232 @@
+---
+hostname: dev.bigbang
+
+istio:
+  # Toggle istio interaction
+  enabled: false
+  fluentd:
+    enabled: true
+    annotations: {}
+    labels: {}
+    gateways:
+      - istio-system/main
+    hosts:
+      - fluentd.{{ .Values.hostname }}
+
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+image:
+  repository: quay.io/fluentd_elasticsearch/fluentd
+  pullPolicy: "IfNotPresent"
+  tag: "v3.2.0"
+
+imagePullSecrets: []
+  # - name: private-registry
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: null
+
+rbac:
+  create: true
+
+# Configure podsecuritypolicy
+# Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+podSecurityPolicy:
+  enabled: true
+  annotations: {}
+
+## Security Context policies for controller pods
+## See https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/ for
+## notes on enabling and using sysctls
+##
+podSecurityContext: {}
+
+securityContext: {}
+
+resources: {}
+
+nodeSelector: {}
+
+priorityClassName: ""
+
+## Node tolerations for server scheduling to nodes with taints
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+##
+tolerations: []
+
+## Affinity and anti-affinity
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+##
+affinity: {}
+
+## Annotations to be added to fluentd pods
+##
+podAnnotations: {}
+
+
+## Additional environment variables to set for fluentd pods
+env:
+  - name: "FLUENTD_CONF"
+    value: "/etc/fluent/fluent.conf"
+  - name: "FLUENT_ELASTICSEARCH_DATA_STREAM_NAME"
+    value: "logs-k8s-cluster"
+  - name: "FLUENT_FORWARD_PASSWORD"
+    value: "secret"
+
+envFrom: []
+
+volumes:
+  - name: varlog
+    hostPath:
+      path: /var/log
+  - name: etcfluentd-main
+    configMap:
+      name: fluentd-main
+      defaultMode: 0777
+  - name: etcfluentd-config
+    configMap:
+      name: fluentd-config
+      defaultMode: 0777
+
+volumeMounts:
+  - name: varlog
+    mountPath: /var/log
+  - name: etcfluentd-main
+    mountPath: /etc/fluent
+  - name: etcfluentd-config
+    mountPath: /etc/fluent/config.d/
+
+## Prometheus Monitoring
+##
+metrics:
+  serviceMonitor:
+    enabled: false
+    additionalLabels:
+      release: prometheus-operator
+    namespace: ""
+    namespaceSelector: {}
+
+  prometheusRule:
+    enabled: false
+    additionalLabels: {}
+    namespace: ""
+    rules: []
+
+## Grafana Monitoring Dashboard
+##
+dashboards:
+  enabled: false
+
+## Fluentd list of plugins to install
+##
+plugins: []
+# - fluent-plugin-record-modifier
+
+## Add fluentd config files from K8s configMaps
+##
+configMapConfigs:
+  - fluentd-prometheus-conf
+  - fluentd-systemd-conf
+
+## Elasticsearch info
+elasticsearch:
+  host: logging-ek-es-http
+  port: 9200
+  user: elastic
+  ## set password directly using elastic_password, or set the secret and key to use to grab the password.
+  elastic_password: ""
+  password:
+    secret: logging-ek-es-elastic-user
+    key: elastic
+
+## Fluentd service
+## Important: these correlate to the <source> you define in your fluentd config
+service:
+  type: "ClusterIP"
+  annotations: {}
+  ## Important: these correlate to the <source> you define in your fluentd config 
+  ports:
+  - name: "forwarder"
+    protocol: TCP
+    containerPort: 24224
+    tcpPort: 24225
+
+## Fluentd Configurations
+##
+fileConfigs:
+  01_sources.conf: |-
+    ## Ignore fluentd own events
+    <match fluent.**>
+      @type null
+    </match>
+    <source>
+      @type forward
+      @log_level debug
+      port 24224
+      bind 0.0.0.0
+      <security>
+        self_hostname {{ tpl (index .Values.istio.fluentd.hosts 0) $ }}
+        shared_key "#{ENV["FLUENT_FORWARD_PASSWORD"]}"
+      </security>
+    </source>
+
+  02_filters.conf: |-
+    # <filter **>
+    # @type record_modifier
+    #   <record>
+    #     some_key "some_value"
+    #   </record>
+    # </filter>
+    <match **>
+        @type relabel
+        @label @DISPATCH
+    </match>
+
+  03_dispatch.conf: |-
+    <label @DISPATCH>
+      <filter **>
+        @type prometheus
+        <metric>
+          name fluentd_input_status_num_records_total
+          type counter
+          desc The total number of incoming records
+          <labels>
+            tag ${tag}
+            hostname ${hostname}
+          </labels>
+        </metric>
+      </filter>
+
+      <match **>
+        @type relabel
+        @label @OUTPUT
+      </match>
+    </label>
+
+  04_outputs.conf: |-
+    <label @OUTPUT>
+      <match **>
+        @type elasticsearch_data_stream
+        # ECS Naming convention for data_streams
+        # https://www.elastic.co/guide/en/elasticsearch/reference/master/set-up-a-data-stream.html#elastic-data-stream-naming-scheme
+        # <type>-<dataset>-<namespace>
+        data_stream_name "#{ENV["FLUENT_ELASTICSEARCH_DATA_STREAM_NAME"]}"
+        host  "#{ENV["FLUENT_ELASTICSEARCH_HOST"]}"
+        port "#{ENV["FLUENT_ELASTICSEARCH_PORT"]}"
+        user "#{ENV["FLUENT_ELASTICSEARCH_USER"]}"
+        password "#{ENV["FLUENT_ELASTICSEARCH_PASSWORD"]}"
+        flush_interval 10s
+        ssl_verify false
+        reload_connections false
+        request_timeout 60s
+        logstash_format false
+        scheme https
+        ssl_version TLSv1_2
+        bulk_message_request_threshold 5M
+      </match>
+    </label>
