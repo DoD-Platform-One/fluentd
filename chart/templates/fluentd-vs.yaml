@@ -1,3 +1,21 @@
+{{- define "check-if-there-are-tcp-ports" -}}
+    {{- $allports := index . 0 -}}
+    {{- range $i, $port := $allports -}}
+        {{- if eq $port.protocol "TCP" -}}
+            {{- nindent 1 $port.name -}}: {{ default "literally-anything" $port.protocol -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- define "check-if-there-are-http-ports" -}}
+    {{- $allports := index . 0 -}}
+    {{- range $i, $port := $allports -}}
+        {{- if eq $port.protocol "HTTP" -}}
+            {{- nindent 1 $port.name -}}: {{ default "literally-anything" $port.protocol -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
 {{- if and .Values.istio.enabled .Values.istio.fluentd.enabled -}}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -22,9 +40,12 @@ spec:
   hosts:
     - {{ tpl . $ }}
   {{- end }}
+  {{ $tcp := include "check-if-there-are-tcp-ports" (list .Values.service.ports ) }}
+  {{- if gt (len $tcp) 0 -}}
+  tcp:
+  {{- end }}
   {{- range .Values.service.ports }}
   {{- if eq .protocol "TCP"}}
-  tcp:
     - match:
       - port: {{ .tcpPort }}
       route:
@@ -32,8 +53,14 @@ spec:
             port:
               number: {{ .containerPort }}
             host: {{ include "fluentd.fullname" $ }}
-  {{- else if eq .protocol "HTTP" }}
+  {{- end }}
+  {{- end }}
+  {{ $http := include "check-if-there-are-http-ports" (list .Values.service.ports ) }}
+  {{- if gt (len $http) 0 -}}
   http:
+  {{- end }}
+  {{- range .Values.service.ports}}
+  {{- if eq .protocol "HTTP" }}
     - route:
         - destination:
             port:
