@@ -141,8 +141,11 @@ elasticsearch:
   ## set password directly using elastic_password, or set the secret and key to use to grab the password.
   elastic_password: ""
   password:
+    ## This is the secret to lookup and extract the password from
+    ## currently the secret is expected to have the value `.data.elastic`
+    ## which is the default format for elasticsearch 
     secret: logging-ek-es-elastic-user
-    key: elastic
+    namespace: logging
 
 ## Fluentd service
 ## Important: these correlate to the <source> you define in your fluentd config

@@ -40,8 +40,8 @@ containers:
       {{ else }}
         valueFrom:
           secretKeyRef:
-            name: {{ tpl .Values.elasticsearch.password.secret . }}
-            key: {{ tpl .Values.elasticsearch.password.key . }}
+            name: elasticsearch-credentials
+            key: es_password
       {{- end }}
     {{- toYaml .Values.env | nindent 6 }}
   {{- end }}
