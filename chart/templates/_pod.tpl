@@ -72,7 +72,7 @@ containers:
       {{- toYaml .Values.volumeMounts | nindent 6 }}
       {{- range $key := .Values.configMapConfigs }}
       {{- print "- name: fluentd-custom-cm-" $key  | nindent 6 }}
-        {{- print "mountPath: /etc/fluent/" $key ".d"  | nindent 8 }}
+        {{- print "mountPath: /fluentd/etc/" $key ".d"  | nindent 8 }}
       {{- end }}
 volumes:
   {{- toYaml .Values.volumes | nindent 2 }}
