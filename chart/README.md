@@ -2,41 +2,14 @@
 
 [Fluentd](https://www.fluentd.org/) is an open source data collector for unified logging layer. Fluentd allows you to unify data collection and consumption for a better use and understanding of data.
 
-## Installation
-
-To add the `fluent` helm repo, run:
-
-```sh
-helm repo add fluent https://fluent.github.io/helm-charts
-helm repo update
-```
-
-To install a release named `fluentd`, run:
-
-```sh
-helm install fluentd fluent/fluentd
-```
-
-## Chart Values
-
-```sh
-helm show values fluent/fluentd
-```
 
 ## Value Details
 
 ### default-volumes
 
-The default configurations bellow are required for the fluentd pod to be able to read the hosts container logs. The second section is responsible for  allowing the user to load the "extra" configMaps either defined by the `fileConfigs` contained objects or, in addition, loaded externally and indicated by `configMapConfigs`.
+The default configurations bellow are required for the fluentd pod to allow the user to load the "extra" configMaps either defined by the `fileConfigs` contained objects or, in addition, loaded externally and indicated by `configMapConfigs`.
 
 ```yaml
-- name: varlog
-  hostPath:
-    path: /var/log
-- name: varlibdockercontainers
-  hostPath:
-    path: /var/lib/docker/containers
----
 - name: etcfluentd-main
   configMap:
     name: fluentd-main
@@ -48,16 +21,6 @@ The default configurations bellow are required for the fluentd pod to be able to
 ```
 
 ### default-volumeMounts
-
-The default configurations bellow are required for the fluentd pod to be able to read the hosts container logs. They should not be removed unless for some reason your container logs are accessible through a different path
-
-```yaml
-- name: varlog
-  mountPath: /var/log
-- name: varlibdockercontainers
-  mountPath: /var/lib/docker/containers
-  readOnly: true
-```
 
 The section bellow is responsible for allowing the user to load the "extra" configMaps either defined by the `fileConfigs` contained objects or otherwise load externally and indicated by `configMapConfigs`.
 
@@ -165,7 +128,7 @@ The `fileConfigs` section is organized by sources -> filters -> destinations. Fl
 
 ## Backwards Compatibility - v0.1.x
 
-The old fluentd chart used the ENV variables and the default fluentd container definitions to set-up automatically many aspects of fluentd. It is still possible to trigger this behaviour by removing this charts current `.Values.env` configuration and replace by:
+The old fluentd chart used the ENV variables and the default fluentd container definitions to set-up automatically many aspects of fluentd. It is still possible to trigger this behavior by removing this charts current `.Values.env` configuration and replace by:
 
 ```yaml
 env:
