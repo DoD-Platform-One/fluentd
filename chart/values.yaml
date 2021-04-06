@@ -116,6 +116,7 @@ metrics:
 ##
 dashboards:
   enabled: false
+  # namespace: 
 
 ## Add fluentd config files from K8s configMaps
 ##
