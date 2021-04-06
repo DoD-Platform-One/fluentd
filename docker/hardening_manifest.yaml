@@ -1,0 +1,165 @@
+---
+apiVersion: v1
+
+# The repository name in registry1, excluding /ironbank/
+name: "opensource/fluentd/fluentd-aggregator"
+
+# List of tags to push for the repository in registry1
+# The most specific version should be the first tag and will be shown
+# on ironbank.dsop.io
+tags:
+- "1.12.1"
+- "latest"
+
+# Build args passed to Dockerfile ARGs
+args:
+  BASE_IMAGE: "opensource/fluentd/fluentd"
+  BASE_TAG: "1.12.1"
+
+# Docker image labels
+labels:
+  org.opencontainers.image.title: "fluentd-aggregator"
+  ## Human-readable description of the software packaged in the image
+  org.opencontainers.image.description: "This is a fluentd container that can be used as a central aggregation point for multiple log sources and destinations."
+  ## License(s) under which contained software is distributed
+  org.opencontainers.image.licenses: "Apache-2.0"
+  ## URL to find more information on the image
+  org.opencontainers.image.url: "https://github.com/fluent/fluentd-docker-image"
+  ## Name of the distributing entity, organization or individual
+  org.opencontainers.image.vendor: "opensource"
+  org.opencontainers.image.version: "1.11.5"
+  ## Keywords to help with search (ex. "cicd,gitops,golang")
+  mil.dso.ironbank.image.keywords: "fluentd,logs,aggregator,plugin"
+  ## This value can be "opensource" or "commercial"
+  mil.dso.ironbank.image.type: "opensource"
+  ## Product the image belongs to for grouping multiple images
+  mil.dso.ironbank.product.name: "fluentd-aggregator"
+
+# List of resources to make available to the offline build context
+resources:
+- filename: fluent-plugin-elasticsearch-5.0.2.gem
+  url: https://rubygems.org/downloads/fluent-plugin-elasticsearch-5.0.2.gem
+  validation:
+    type: sha256
+    value: CHANGEME
+- filename: multi_json-1.15.0.gem
+  url: https://rubygems.org/downloads/multi_json-1.15.0.gem
+  validation:
+    type: sha256
+    value: 1fd04138b6e4a90017e8d1b804c039031399866ff3fbabb7822aea367c78615d
+- filename: multipart-post-2.1.1.gem
+  url: https://rubygems.org/downloads/multipart-post-2.1.1.gem
+  validation:
+    type: sha256
+    value: d2dd7aa957650e0d99e0513cd388401b069f09528441b87d884609c8e94ffcfd
+- filename: faraday-1.3.0.gem
+  url: https://rubygems.org/downloads/faraday-1.3.0.gem
+  validation:
+    type: sha256
+    value: 7f06817ba823ddeabf4dd85ca5e0f63e234527f564a03f09f6c7127951d3bac2
+- filename: elasticsearch-transport-7.12.0.gem
+  url: https://rubygems.org/downloads/elasticsearch-transport-7.12.0.gem
+  validation:
+    type: sha256
+    value: CHANGEME
+- filename: elasticsearch-api-7.12.0.gem
+  url: https://rubygems.org/downloads/elasticsearch-api-7.12.0.gem
+  validation:
+    type: sha256
+    value: CHANGEME
+- filename: elasticsearch-7.12.0.gem
+  url: https://rubygems.org/downloads/elasticsearch-7.12.0.gem
+  validation:
+    type: sha256
+    value: CHANGEME
+- filename: elasticsearch-xpack-7.12.0.gem
+  url: https://rubygems.org/downloads/elasticsearch-xpack-7.12.0.gem
+  validation:
+    type: sha256
+    value: CHANGEME
+- filename: excon-0.79.0.gem
+  url: https://rubygems.org/downloads/excon-0.79.0.gem
+  validation:
+    type: sha256
+    value: 4344c30920b6307abec145863035fe71bbb1be243fe8d60ce2fa61f333d0a99c
+- filename: fluent-plugin-beats-1.1.0.gem
+  url: https://rubygems.org/downloads/fluent-plugin-beats-1.1.0.gem
+  validation:
+    type: sha256
+    value: abc0ce0ba3082464d0900bdf519e97a0011ab6477b4356714e01eec7fa4d3567
+- filename: fluent-plugin-rewrite-tag-filter-2.4.0.gem
+  url: https://rubygems.org/downloads/fluent-plugin-rewrite-tag-filter-2.4.0.gem
+  validation:
+    type: sha256
+    value: 46af7e6081bb96ba8585aff8a06ad3f4459693b94aad066813941d042fb25bee
+- filename: fluent-plugin-s3-1.5.1.gem
+  url: https://rubygems.org/downloads/fluent-plugin-s3-1.5.1.gem
+  validation:
+    type: sha256
+    value: 75de6db147e8aecf35a994aa8e5f139d38931e1d6bca04b1f2c1504bd23aa966
+- filename: fluent-plugin-prometheus-2.0.0.gem
+  url: https://rubygems.org/downloads/fluent-plugin-prometheus-2.0.0.gem
+  validation:
+    type: sha256
+    value: 6b24bc5112d9d363984dc4b2f6ed047ab0aafa43016d269d04f5fcf9014f7076
+- filename: prometheus-client-2.1.0.gem
+  url: https://rubygems.org/downloads/prometheus-client-2.1.0.gem
+  validation:
+    type: sha256
+    value: 77ed63c3cee6c2c94a355e229eb8c3f14572de65bd1251edff81fab8b23371e9
+  # elasticsearch plugin dependency
+- filename: faraday-net_http-1.0.1.gem                                      
+  url: https://rubygems.org/downloads/faraday-net_http-1.0.1.gem
+  validation:
+    type: sha256
+    value: 3245ce406ebb77b40e17a77bfa66191dda04be2fd4e13a78d8a4305854d328ba
+  # elasticsearch plugin dependency
+- filename: ruby2_keywords-0.0.4.gem
+  url: https://rubygems.org/downloads/ruby2_keywords-0.0.4.gem
+  validation:
+    type: sha256
+    value: 3ae3189c2e1d2f60204dcceedf890ff49dd28979771e2576016a3ee73b668e97
+- filename: fluent-plugin-dedot_filter-1.0.0.gem
+  url: https://rubygems.org/downloads/fluent-plugin-dedot_filter-1.0.0.gem
+  validation:
+    type: sha256
+    value: ace64a11b989e822404dbd375d5b5b07e49f40b7a2461c33e6539e1def8f646b
+- filename: fluent-plugin-record-modifier-2.1.0.gem
+  url: https://rubygems.org/downloads/fluent-plugin-record-modifier-2.1.0.gem
+  validation:
+    type: sha256
+    value: c7c945836b47a2e0885202d14e96f190f2411a532741c2ec925e05689d5d42a1
+- filename: fluent-plugin-secure-forward-0.4.5.gem
+  url: https://rubygems.org/downloads/fluent-plugin-secure-forward-0.4.5.gem
+  validation:
+    type: sha256
+    value: 3c2eb1801bef01237e7d0020f8c5415faf13a2e8fdc0017427787481e2371a67
+- filename: proxifier-1.0.3.gem
+  url: https://rubygems.org/downloads/proxifier-1.0.3.gem
+  validation:
+    type: sha256
+    value: 40fef4d2c79313a12b8be2799146cb225b35665975a238ba0d513a96c6a37fa9
+- filename: resolve-hostname-0.1.0.gem
+  url: https://rubygems.org/downloads/resolve-hostname-0.1.0.gem
+  validation:
+    type: sha256
+    value: 2a917efed2bd934247a87a78be30d27c65061309ed127ce68d268b7097bac105
+- filename: fluent-plugin-multi-format-parser-1.0.0.gem
+  url: https://rubygems.org/downloads/fluent-plugin-multi-format-parser-1.0.0.gem
+  validation:
+    type: sha256
+    value: 9acde4df831b221f0a682c242eba851e52572870a549a55956c9306668e6aa97
+
+# List of project maintainers
+# FIXME: Fill in the following details for the current container owner in the whitelist
+# FIXME: Include any other vendor information if applicable
+maintainers:
+- email: "celkins@applied-insight.com"
+#   # The name of the current container owner
+  name: "Chad Elkins"
+#   # The gitlab username of the current container owner
+  username: "celkins"
+  cht_member: true # FIXME: Uncomment if the maintainer is a member of CHT
+# - name: "FIXME"
+#   username: "FIXME"
+#   email: "FIXME"
