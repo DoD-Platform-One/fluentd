@@ -116,11 +116,7 @@ metrics:
 ##
 dashboards:
   enabled: false
-
-## Fluentd list of plugins to install
-##
-plugins: []
-# - fluent-plugin-record-modifier
+  # namespace: 
 
 ## Add fluentd config files from K8s configMaps
 ##
