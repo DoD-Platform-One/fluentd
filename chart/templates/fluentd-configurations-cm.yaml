@@ -7,6 +7,8 @@ metadata:
 data:
 {{- range $key, $value := .Values.fileConfigs }}
   {{$key }}: |-
+    ## Changing from upstream chart
+    ## adding tpl to all helm templating in the configuation
     {{- tpl $value $ | nindent 4 }}
 {{- end }}
 
