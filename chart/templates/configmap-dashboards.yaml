@@ -3,13 +3,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  {{- with $.Values.dashboards.namespace }}
-  namespace: {{ . }}
-  {{- end }}
   name: dashboard-{{ trimSuffix ".json" (base $path) }}
+  namespace: {{ $.Values.dashboards.namespace | default $.Release.Namespace }}
   labels:
     {{- include "fluentd.labels" $ | nindent 4 }}
-    grafana_dashboard: "1"
+    {{- range $key, $val := $.Values.dashboards.labels }}
+    {{ $key }}: {{ $val }}
+    {{- end }}
 data:
   {{ base $path }}: |-
     {{- $.Files.Get $path | nindent 4 }}

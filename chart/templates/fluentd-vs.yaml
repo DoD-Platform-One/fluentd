@@ -1,3 +1,4 @@
+## Added to upstream chart to support istio integration
 {{- define "check-if-there-are-tcp-ports" -}}
     {{- $allports := index . 0 -}}
     {{- range $i, $port := $allports -}}

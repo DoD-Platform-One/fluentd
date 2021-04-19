@@ -1,5 +1,5 @@
 {{- define "fluentd.pod" -}}
-{{- $defaultTag := printf "%s-debian-elasticsearch" (.Chart.AppVersion) -}}
+{{- $defaultTag := printf "%s-debian-elasticsearch7-1.0" (.Chart.AppVersion) -}}
 {{- with .Values.imagePullSecrets }}
 imagePullSecrets:
   {{- toYaml . | nindent 2 }}
@@ -16,7 +16,8 @@ containers:
       {{- toYaml .Values.securityContext | nindent 6 }}
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default $defaultTag }}"
     imagePullPolicy: {{ .Values.image.pullPolicy }}
-  # Commenting out to remove support for plugin installation at runtime
+  ## Changing from upstream chart
+  ## IB image does not support dynamic plugin installation at runtime
   # {{- if .Values.plugins }}
   #   command:
   #   - "/bin/sh"
@@ -25,10 +26,11 @@ containers:
   #     {{- range $plugin := .Values.plugins }}
   #       {{- print "fluent-gem install " $plugin | nindent 6 }}
   #     {{- end }}
-  #     exec ./entrypoint.sh
+  #     exec /fluentd/entrypoint.sh
   # {{- end }}
   {{- if .Values.env }}
     env:
+      ## Adding to upstream chart for elasticsearch integration
       - name: FLUENT_ELASTICSEARCH_HOST
         value: {{ tpl .Values.elasticsearch.host . }}
       - name: FLUENT_ELASTICSEARCH_PORT
@@ -44,6 +46,7 @@ containers:
             name: elasticsearch-credentials
             key: es_password
       {{- end }}
+      ## end addition
     {{- toYaml .Values.env | nindent 6 }}
   {{- end }}
   {{- if .Values.envFrom }}
@@ -73,7 +76,7 @@ containers:
       {{- toYaml .Values.volumeMounts | nindent 6 }}
       {{- range $key := .Values.configMapConfigs }}
       {{- print "- name: fluentd-custom-cm-" $key  | nindent 6 }}
-        {{- print "mountPath: /fluentd/etc/" $key ".d"  | nindent 8 }}
+        {{- print "mountPath: /fluentd/etc/" $key ".d"  | nindent 8 }} ## Changing for IB image
       {{- end }}
 volumes:
   {{- toYaml .Values.volumes | nindent 2 }}
