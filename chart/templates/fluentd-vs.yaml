@@ -17,7 +17,7 @@
     {{- end -}}
 {{- end -}}
 
-{{- if and .Values.istio.enabled .Values.istio.fluentd.enabled -}}
+{{- if and .Values.istio.enabled .Values.istio.fluentd.enabled }}
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
