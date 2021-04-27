@@ -200,10 +200,11 @@ dashboards:
   labels:
     grafana_dashboard: '"1"'
 
-## Fluentd list of plugins to install
-##
-plugins: []
-# - fluent-plugin-out-http
+## Changed from upstream (IB image doesn't support dynamic plugin installation at runtime)
+# ## Fluentd list of plugins to install
+# ##
+# plugins: []
+# # - fluent-plugin-out-http
 
 ## Add fluentd config files from K8s configMaps
 ##
