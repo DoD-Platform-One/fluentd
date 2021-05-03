@@ -129,11 +129,12 @@ volumes:
     defaultMode: 0777
 
 volumeMounts:
-- name: varlog
-  mountPath: /var/log
-- name: varlibdockercontainers
-  mountPath: /var/lib/docker/containers
-  readOnly: true
+## Changed from upstream (commented out the two volume mounts)
+# - name: varlog
+#   mountPath: /var/log
+# - name: varlibdockercontainers
+#   mountPath: /var/lib/docker/containers
+#   readOnly: true
 - name: etcfluentd-main
   mountPath: /fluentd/etc/ # changed for IB image
   # mountPath: /etc/fluent 
@@ -142,14 +143,15 @@ volumeMounts:
   # mountPath: /etc/fluent/config.d/ 
 
 ## Fluentd service
-##
 service:
   type: "ClusterIP"
   annotations: {}
-  ports: []
-  # - name: "forwarder"
-  #   protocol: TCP
-  #   containerPort: 24224
+  ports:
+  ## changed from upstream (uncommenting the ports below) 
+  - name: "forwarder"
+    protocol: TCP
+    containerPort: 24224 ## this correlates to the <source> you define in your fluentd config
+    tcpPort: 24225
 
 ## Prometheus Monitoring
 ##
@@ -198,10 +200,11 @@ dashboards:
   labels:
     grafana_dashboard: '"1"'
 
-## Fluentd list of plugins to install
-##
-plugins: []
-# - fluent-plugin-out-http
+## Changed from upstream (IB image doesn't support dynamic plugin installation at runtime)
+# ## Fluentd list of plugins to install
+# ##
+# plugins: []
+# # - fluent-plugin-out-http
 
 ## Add fluentd config files from K8s configMaps
 ##
@@ -212,7 +215,7 @@ configMapConfigs:
 ## Added to upstream chart to support elasticsearch integration
 ## Elasticsearch info
 elasticsearch:
-  host: logging-ek-es-http
+  host: logging-ek-es-http.logging.svc.cluster.local
   port: 9200
   user: elastic
   ## set password directly using elastic_password, or set the secret and key to use to grab the password.
@@ -224,18 +227,6 @@ elasticsearch:
     secret: logging-ek-es-elastic-user
     namespace: logging
 ## End of addition 
-
-## Fluentd service
-## Important: these correlate to the <source> you define in your fluentd config
-service:
-  type: "ClusterIP"
-  annotations: {}
-  ## Important: these correlate to the <source> you define in your fluentd config 
-  ports:
-  - name: "forwarder"
-    protocol: TCP
-    containerPort: 24224
-    tcpPort: 24225
 
 ## Fluentd configurations:
 ##
@@ -286,6 +277,10 @@ fileConfigs:
 
   02_filters.conf: |-
     ## Adding to upstream chart
+    <match **>
+      @type relabel
+      @label @DISPATCH
+    </match>
     # <filter **>
     # @type record_modifier
     #   <record>
@@ -320,7 +315,6 @@ fileConfigs:
     #     @label @DISPATCH
     #   </match>
     # </label>
-
   03_dispatch.conf: |-
     <label @DISPATCH>
       <filter **>
@@ -355,14 +349,16 @@ fileConfigs:
         port "#{ENV["FLUENT_ELASTICSEARCH_PORT"]}"
         user "#{ENV["FLUENT_ELASTICSEARCH_USER"]}"
         password "#{ENV["FLUENT_ELASTICSEARCH_PASSWORD"]}"
-        flush_interval 10s
+        logstash_format false
+        scheme https
         ssl_verify false
         reload_connections false
         request_timeout 60s
-        logstash_format false
-        scheme https
         ssl_version TLSv1_2
         bulk_message_request_threshold 5M
+        <buffer>
+          flush_interval 10s
+        </buffer>
       </match>
     </label>
     ## End addition
