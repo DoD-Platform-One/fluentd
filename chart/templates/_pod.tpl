@@ -66,10 +66,14 @@ containers:
       httpGet:
         path: /metrics
         port: metrics
+      initialDelaySeconds: 5
+      periodSeconds: 5
     readinessProbe:
       httpGet:
         path: /metrics
         port: metrics
+      initialDelaySeconds: 30
+      periodSeconds: 5
     resources:
       {{- toYaml .Values.resources | nindent 8 }}
     volumeMounts:
