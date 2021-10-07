@@ -30,8 +30,8 @@ image:
 
 ## Optional array of imagePullSecrets containing private registry credentials
 ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
-imagePullSecrets:
-  - name: private-registry
+imagePullSecrets: []
+#  - name: private-registry
 
 serviceAccount:
   create: true
@@ -166,7 +166,7 @@ env:
   - name: "FLUENTD_CONF" # Added for IB image
     value: "fluent.conf" # Added for IB image 
   - name: "FLUENT_ELASTICSEARCH_DATA_STREAM_NAME" # Added to chart
-    value: "logs-k8s-cluster" # Added to chart
+    value: "" # Added to chart
   - name: "FLUENT_FORWARD_PASSWORD" # Added to chart
     value: "secret" # Added to chart
 # - name: FLUENTD_CONF"  # Commented out from upstream chart
