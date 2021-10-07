@@ -4,7 +4,7 @@ description: A Helm chart for Kubernetes
 # type: application
 ## version and appVersion changed from upstream
 version: 0.2.11-bb.0
-appVersion: v1.12.0
+appVersion: v1.14.0
 icon: https://www.fluentd.org/assets/img/miscellany/fluentd-logo_2x.png
 home: https://www.fluentd.org/
 sources:
