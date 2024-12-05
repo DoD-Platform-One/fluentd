@@ -1,5 +1,15 @@
+<!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # fluentd
 
-This repository houses a helm chart to deploy fluentd as an aggregator.
+![Version: 0.3.8-bb.0](https://img.shields.io/badge/Version-0.3.8--bb.0-informational?style=flat-square) ![AppVersion: v1.14.2](https://img.shields.io/badge/AppVersion-v1.14.2-informational?style=flat-square)
 
-It also contains the files necessary to build a fluentd image. This image is built from the IB approved fluentd image, but adds some custom plugins for our use case.
+A Helm chart for Kubernetes
+
+## Upstream References
+- <https://www.fluentd.org/>
+
+* <https://github.com/fluent/fluentd/>
+* <https://github.com/fluent/fluentd-kubernetes-daemonset>
+
+## Upstream Release Notes
+
