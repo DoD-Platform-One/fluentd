@@ -3,15 +3,25 @@ name: fluentd
 description: A Helm chart for Kubernetes
 # type: application
 ## version and appVersion changed from upstream
-version: 0.3.8-bb.0
-appVersion: v1.14.2
-icon: https://www.fluentd.org/assets/img/miscellany/fluentd-logo_2x.png
+version: 0.5.2-bb.0
+appVersion: v1.16.2
+icon: https://www.fluentd.org/images/miscellany/fluentd-logo_2x.png
 home: https://www.fluentd.org/
 sources:
   - https://github.com/fluent/fluentd/
   - https://github.com/fluent/fluentd-kubernetes-daemonset
-maintainers:
-  - name: edsiper
-    email: eduardo@treasure-data.com
-  - name: dioguerra
-    email: diogo.filipe.tomas.guerra@cern.ch
+annotations:
+  bigbang.dev/maintenanceTrack: bb_integrated
+  bigbang.dev/applicationVersions: |
+    - Fluentd: v1.16.2
+  helm.sh/images: |
+    - name: fluentd
+      image: registry1.dso.mil/ironbank/opensource/fluentd/fluentd-kubernetes-daemonset:1.18.0
+  bigbang.dev/upstreamReleaseNotesMarkdown: |
+    - [Find upstream helm chart changelog and release notes here](https://github.com/fluent/helm-charts/releases)
+    - [Find upstream application changelog and release notes here](https://github.com/fluent/fluentd/releases)
+dependencies:
+  - name: fluentd
+    version: "0.5.2"
+    repository: https://fluent.github.io/helm-charts
+    alias: upstream

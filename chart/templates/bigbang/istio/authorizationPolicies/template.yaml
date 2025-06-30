@@ -1,0 +1,15 @@
+{{- /* Render Istio Auth policies */ -}}
+{{- if and .Values.istio.enabled .Values.istio.hardened.enabled .Values.istio.hardened.customAuthorizationPolicies -}}
+{{- range .Values.istio.hardened.customAuthorizationPolicies -}}
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+
+spec:
+  {{- toYaml .spec | nindent 2 }}
+---
+{{ end -}}
+{{ end -}}
+

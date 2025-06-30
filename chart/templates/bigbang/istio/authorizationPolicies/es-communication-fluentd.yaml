@@ -1,0 +1,23 @@
+{{- if and .Values.istio.enabled .Values.istio.hardened.enabled .Values.elasticsearch.enabled }}
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: es-communication-fluentd
+  namespace: {{ .Values.elasticsearch.namespace }}
+spec:
+  selector:
+    matchLabels:
+      common.k8s.elastic.co/type: elasticsearch
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces:
+          - {{ .Release.Namespace }}
+        principals:
+          - cluster.local/ns/{{ .Release.Namespace }}/sa/{{ include "fluentd.serviceAccountName" .Subcharts.upstream }}
+    to:
+    - operation:
+        ports:
+          - "{{ $.Values.elasticsearch.port }}"
+{{- end }}

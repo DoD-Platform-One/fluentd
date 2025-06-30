@@ -1,64 +1,8 @@
-hostname: bigbang.dev
-istio:
+networkPolicies:
   enabled: true
-  fluentd:
-    enabled: true
-    annotations: {}
-    labels: {}
-    gateways:
-      - istio-system/main
-    hosts:
-      - fluentd.{{ .Values.hostname }}
-elasticsearch:
-  host: logging-ek-es-http.logging.svc.cluster.local
-  port: 9200
-  user: elastic
-  elastic_password: "fake-news"
-dashboards:
-  enabled: false
-fileConfigs:
-  01_sources.conf: |-
-    <match fluent.**>
-      @type null
-    </match>
-    <source>
-      @type tcp
-      <parse>
-       @type json
-      </parse>
-      tag tcp.events
-      @log_level info
-      port 24224
-      bind 0.0.0.0
-    </source>
-  02_filters.conf: |-
-    <match **>
-      @type relabel
-      @label @DISPATCH
-    </match>
-  03_dispatch.conf: |-
-    <label @DISPATCH>
-      <filter **>
-        @type prometheus
-        <metric>
-          name fluentd_input_status_num_records_total
-          type counter
-          desc The total number of incoming records
-          <labels>
-            tag ${tag}
-            hostname ${hostname}
-          </labels>
-        </metric>
-      </filter>
-      <match **>
-        @type relabel
-        @label @OUTPUT
-      </match>
-    </label>
-  04_outputs.conf: |-
-    ## Adding to upstream chart
-    <label @OUTPUT>
-      <match **>
-        @type stdout
-      </match>
-    </label>
+  loki:
+    enabled: false
+  tempo:
+    enabled: false
+  elasticsearch:
+    enabled: false
