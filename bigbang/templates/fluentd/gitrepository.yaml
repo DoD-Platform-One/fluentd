@@ -1,0 +1,24 @@
+{{- $pkg := "fluentd" }}
+{{- if (get .Values $pkg).enabled }}
+{{- $gitCredsDict := dict
+  "name" $pkg
+  "packageGitScope" (get .Values $pkg).git
+  "rootScope" .
+  "releaseName" $.Release.Name
+}}
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: {{ $pkg }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $pkg }}
+    {{- include "commonLabels" . | nindent 4}}
+spec:
+  interval: {{ .Values.flux.interval }}
+  url: {{ (get .Values $pkg).git.repo }}
+  ref:
+    {{- include "validRef" (get .Values $pkg).git | nindent 4 }}
+  {{ include "gitIgnore" . }}
+  {{- include "gitCredsExtended" $gitCredsDict | nindent 2 }}
+{{- end }}

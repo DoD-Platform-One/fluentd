@@ -1,0 +1,13 @@
+{{- $pkg := "fluentd" }}
+{{- if (get .Values $pkg).enabled }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $pkg }}
+  labels:
+    {{- if .Values.istiod.enabled }}
+    istio-injection: "enabled"
+    {{- end }}
+    app.kubernetes.io/name: {{ $pkg }}
+    {{- include "commonLabels" . | nindent 4}}
+{{- end }}
