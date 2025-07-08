@@ -1,8 +1,81 @@
-networkPolicies:
-  enabled: true
-  loki:
-    enabled: false
-  tempo:
-    enabled: false
-  elasticsearch:
-    enabled: false
+packages:
+  fluentd:
+    namespace:
+      name: fluentd
+    helmRelease:
+      namespace: "bigbang"
+    enabled: true
+    sourceType: "git"
+    git:
+      repo: https://repo1.dso.mil/big-bang/product/maintained/fluentd.git
+      tag: null
+    values:
+      networkPolicies:
+        enabled: true
+        loki:
+          enabled: false
+        tempo:
+          enabled: false
+        elasticsearch:
+          enabled: false
+
+kyvernoPolicies:
+  enabled: true 
+  values:
+    policies:
+      require-non-root-group:
+        exclude:
+          any:
+          - resources:
+              namespaces:
+              - fluentd
+              names:
+              - fluentd*
+      add-default-securitycontext:
+        exclude:
+          any:
+          - resources:
+              namespaces:
+              - fluentd
+              names:
+              - fluentd*
+      require-non-root-user:
+        exclude:
+          any:
+          - resources:
+              namespaces:
+              - fluentd
+              names:
+              - fluentd*
+      restrict-host-path-mount:
+        exclude:
+          any:
+          - resources:
+              namespaces:
+              - fluentd
+              names:
+              - fluentd* 
+      restrict-host-path-write:
+        exclude:
+          any:
+          - resources:
+              namespaces:
+              - fluentd
+              names:
+              - fluentd*
+      restrict-volume-types:
+        exclude:
+          any:
+          - resources:
+              namespaces:
+              - fluentd
+              names:
+              - fluentd*
+
+
+
+
+kyverno:
+  values:
+    bbtests:
+      enabled: false
