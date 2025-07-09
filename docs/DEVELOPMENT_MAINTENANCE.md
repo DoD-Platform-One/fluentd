@@ -85,7 +85,7 @@ packages:
   fluentd:
     enabled: true
     git:
-      repo: https://repo1.dso.mil/big-bang/apps/sandbox/fluentd.git
+      repo: https://repo1.dso.mil/big-bang/product/maintained/fluentd.git
       # It is recommended to update this to the latest bb tag
       tag: null
       branch: <insert test branch>
@@ -177,7 +177,7 @@ packages:
   fluentd:
     enabled: true
     git:
-      repo: https://repo1.dso.mil/big-bang/apps/sandbox/fluentd.git
+      repo: https://repo1.dso.mil/big-bang/product/maintained/fluentd.git
       # It is recommended to update this to the latest bb tag
       tag: null
       branch: <insert test branch>
