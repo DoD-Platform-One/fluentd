@@ -3,8 +3,7 @@ fluentd:
   git:
     repo: https://repo1.dso.mil/big-bang/product/maintained/fluentd.git
     # It is recommended to update this to the latest bb tag
-    tag: null
-    branch: 480-epic-fluentd
+    branch: main
     path: "chart"
   flux:
     timeout: 30m
