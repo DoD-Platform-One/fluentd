@@ -8,6 +8,7 @@ packages:
     sourceType: "git"
     git:
       repo: https://repo1.dso.mil/big-bang/product/maintained/fluentd.git
+      branch: main
       tag: null
     values:
       networkPolicies:
@@ -55,6 +56,21 @@ kyvernoPolicies:
               - fluentd
               names:
               - fluentd* 
+          - resources:
+              namespaces:
+              - logging
+              names:
+              - elasticsearch*
+          - resources:
+              namespaces:
+              - minio-operator
+              names:
+              - minio*
+          - resources:
+              namespaces:
+              - monitoring
+              names:
+              - monitoring*
       restrict-host-path-write:
         exclude:
           any:
@@ -63,6 +79,21 @@ kyvernoPolicies:
               - fluentd
               names:
               - fluentd*
+          - resources:
+              namespaces:
+              - logging
+              names:
+              - elasticsearch*
+          - resources:
+              namespaces:
+              - minio-operator
+              names:
+              - minio*
+          - resources:
+              namespaces:
+              - monitoring
+              names:
+              - monitoring*
       restrict-volume-types:
         exclude:
           any:
@@ -71,9 +102,21 @@ kyvernoPolicies:
               - fluentd
               names:
               - fluentd*
-
-
-
+          - resources:
+              namespaces:
+              - logging
+              names:
+              - elasticsearch*
+          - resources:
+              namespaces:
+              - minio-operator
+              names:
+              - minio*
+          - resources:
+              namespaces:
+              - monitoring
+              names:
+              - monitoring*
 
 kyverno:
   values:
