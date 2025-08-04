@@ -28,7 +28,7 @@ networkPolicies:
   enabled: true
 
 kyvernoPolicies:
-  enabled: true 
+  enabled: true
   values:
     policies:
       require-non-root-group:
@@ -119,8 +119,14 @@ istiod:
 networkPolicies:
   enabled: true
 
+monitoring:
+  enabled: true
+
+grafana:
+  enabled: true
+
 kyvernoPolicies:
-  enabled: true 
+  enabled: true
   values:
     policies:
       require-non-root-group:
