@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.3-bb.0] (2025-07-08)
+### Changed
+- fluentd 0.5.2 -> 0.5.3
+- registry1.dso.mil/ironbank/opensource/fluentd/fluentd-kubernetes-daemonset 1.16.2 -> 1.18.0
+- add initial gluon version 0.6.3 to support future test integration
+
 ## [0.5.2-bb.0] - 2025-04-01
 ### Update
  - Fluentd version change from 1.14.2 to 1.18.0
