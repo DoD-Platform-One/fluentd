@@ -89,6 +89,8 @@ packages:
       # It is recommended to update this to the latest bb tag
       tag: null
       branch: <insert test branch>
+    helmRelease:
+      namespace: bigbang    
     istio:
       injection: enabled
     values:
@@ -187,6 +189,8 @@ packages:
       # It is recommended to update this to the latest bb tag
       tag: null
       branch: <insert test branch>
+    helmRelease:
+      namespace: bigbang
     dependsOn:
       - name: ek
         namespace: bigbang
@@ -284,6 +288,10 @@ packages:
                 suppress_type_name true
                 include_tag_key true
                 ca_file /etc/elasticsearch/certs/ca.crt
+                custom_headers {
+                  "Accept":"application/vnd.elasticsearch+json; compatible-with=9",
+                  "Content-Type":"application/vnd.elasticsearch+json; compatible-with=9"
+                }
                 <buffer>
                   @type file
                   path /var/log/fluentd-buffers/es-kube
@@ -303,6 +311,10 @@ packages:
                 suppress_type_name true
                 logstash_prefix node
                 ca_file /etc/elasticsearch/certs/ca.crt
+                custom_headers {
+                  "Accept":"application/vnd.elasticsearch+json; compatible-with=9",
+                  "Content-Type":"application/vnd.elasticsearch+json; compatible-with=9"
+                }
                 <buffer>
                   @type file
                   path /var/log/fluentd-buffers/es-host

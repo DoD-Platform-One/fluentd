@@ -3,7 +3,7 @@ upstream:
   image:
     repository: "registry1.dso.mil/ironbank/opensource/fluentd/fluentd-kubernetes-daemonset"
     pullPolicy: "Always"
-    tag: "1.18.0"
+    tag: "1.19.0"
 
   imagePullSecrets:
     - name: private-registry
