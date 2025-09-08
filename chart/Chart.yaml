@@ -3,8 +3,8 @@ name: fluentd
 description: A Helm chart for Kubernetes
 # type: application
 ## version and appVersion changed from upstream
-version: 0.5.3-bb.0
-appVersion: 1.18.0
+version: 0.5.3-bb.1
+appVersion: 1.19.0
 icon: https://www.fluentd.org/images/miscellany/fluentd-logo_2x.png
 home: https://www.fluentd.org/
 sources:
@@ -16,15 +16,15 @@ dependencies:
     repository: https://fluent.github.io/helm-charts
     alias: upstream
   - name: gluon
-    version: 0.6.3
+    version: 0.8.4
     repository: oci://registry1.dso.mil/bigbang
 annotations:
   bigbang.dev/maintenanceTrack: bb_integrated
   bigbang.dev/applicationVersions: |
-    - Fluentd: 1.18.0
+    - Fluentd: 1.19.0
   helm.sh/images: |
     - name: fluentd
-      image: registry1.dso.mil/ironbank/opensource/fluentd/fluentd-kubernetes-daemonset:1.18.0
+      image: registry1.dso.mil/ironbank/opensource/fluentd/fluentd-kubernetes-daemonset:1.19.0
   bigbang.dev/upstreamReleaseNotesMarkdown: |
     - [Find upstream helm chart changelog and release notes here](https://github.com/fluent/helm-charts/releases)
     - [Find upstream application changelog and release notes here](https://github.com/fluent/fluentd/releases)

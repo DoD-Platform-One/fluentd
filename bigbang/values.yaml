@@ -105,6 +105,10 @@ fluentd:
               suppress_type_name true
               include_tag_key true
               ca_file /etc/elasticsearch/certs/ca.crt
+              custom_headers {
+                "Accept":"application/vnd.elasticsearch+json; compatible-with=9",
+                "Content-Type":"application/vnd.elasticsearch+json; compatible-with=9"
+              }
               <buffer>
                 @type file
                 path /var/log/fluentd-buffers/es-kube
@@ -124,6 +128,10 @@ fluentd:
               suppress_type_name true
               logstash_prefix node
               ca_file /etc/elasticsearch/certs/ca.crt
+              custom_headers {
+                "Accept":"application/vnd.elasticsearch+json; compatible-with=9",
+                "Content-Type":"application/vnd.elasticsearch+json; compatible-with=9"
+              }
               <buffer>
                 @type file
                 path /var/log/fluentd-buffers/es-host
@@ -252,9 +260,6 @@ kyvernoPolicies:
               - monitoring*
 
 kyvernoReporter:
-  enabled: false
-
-promtail:
   enabled: false
 
 alloy:

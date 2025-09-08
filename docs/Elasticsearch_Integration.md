@@ -2,6 +2,28 @@
 
 Follow these steps to configure Fluentd to send logs to Big Bang-managed Elasticsearch.
 
+**⚠️Important Notice for Elasticsearch 9⚠️** There is currently an open issue with the fluentd plugin `fluent-plugin-elasticsearch:6.0.0` when used with Elasticsearch 9.X where the plugin does not pass the correct headers to Elasticsearch. If working with Elasticsearch 9 you will need to add an additional header to your configuration:
+
+Ref: https://github.com/uken/fluent-plugin-elasticsearch/issues/1061
+
+```yaml
+packages:
+  fluentd:
+    upstream:
+      fileConfigs:
+        04_outputs.conf: | -
+        <label @OUTPUT>
+          <match example.** >
+          ...
+          custom_headers {
+            "Accept":"application/vnd.elasticsearch+json; compatible-with=9",
+            "Content-Type":"application/vnd.elasticsearch+json; compatible-with=9"
+          }
+          ...
+          </match>
+        </label>
+```
+
 ---
 ## 1. Enable Elasticsearch in the values.yaml
 Set enable to true under elasticsearch
