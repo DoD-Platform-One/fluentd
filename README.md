@@ -1,7 +1,7 @@
 <!-- Warning: Do not manually edit this file. See notes on gluon + helm-docs at the end of this file for more information. -->
 # fluentd
 
-![Version: 0.5.3-bb.1](https://img.shields.io/badge/Version-0.5.3--bb.1-informational?style=flat-square) ![AppVersion: 1.19.0](https://img.shields.io/badge/AppVersion-1.19.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
+![Version: 0.5.3-bb.2](https://img.shields.io/badge/Version-0.5.3--bb.2-informational?style=flat-square) ![AppVersion: 1.19.0](https://img.shields.io/badge/AppVersion-1.19.0-informational?style=flat-square) ![Maintenance Track: bb_integrated](https://img.shields.io/badge/Maintenance_Track-bb_integrated-green?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -81,6 +81,7 @@ helm install fluentd chart/
 | networkPolicies.tempo.enabled | bool | `true` |  |
 | networkPolicies.elasticsearch.enabled | bool | `true` |  |
 | networkPolicies.controlPlaneCidr | string | `"0.0.0.0/0"` |  |
+| networkPolicies.vpcCidr | string | `"0.0.0.0/0"` |  |
 | networkPolicies.additionalPolicies | list | `[]` |  |
 
 ## Contributing

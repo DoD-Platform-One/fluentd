@@ -3,7 +3,7 @@ name: fluentd
 description: A Helm chart for Kubernetes
 # type: application
 ## version and appVersion changed from upstream
-version: 0.5.3-bb.1
+version: 0.5.3-bb.2
 appVersion: 1.19.0
 icon: https://www.fluentd.org/images/miscellany/fluentd-logo_2x.png
 home: https://www.fluentd.org/

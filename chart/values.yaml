@@ -199,4 +199,5 @@ networkPolicies:
     enabled: true
   # See `kubectl cluster-info` and then resolve to 
   controlPlaneCidr: 0.0.0.0/0
+  vpcCidr: 0.0.0.0/0
   additionalPolicies: []
